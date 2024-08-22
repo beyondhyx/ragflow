@@ -29,6 +29,7 @@ from FlagEmbedding import FlagModel
 import torch
 import numpy as np
 import asyncio
+import json
 from api.utils.file_utils import get_home_cache_dir
 from rag.utils import num_tokens_from_string, truncate
 import google.generativeai as genai 
@@ -421,7 +422,7 @@ class BedrockEmbed(Base):
 
             response = self.client.invoke_model(modelId=self.model_name, body=json.dumps(body))
             model_response = json.loads(response["body"].read())
-            embeddings.extend([model_response["embedding"]])
+            embeddings.extend([model_response["embeddings"]])
             token_count += num_tokens_from_string(text)
 
         return np.array(embeddings), token_count
@@ -437,7 +438,7 @@ class BedrockEmbed(Base):
 
         response = self.client.invoke_model(modelId=self.model_name, body=json.dumps(body))
         model_response = json.loads(response["body"].read())
-        embeddings.extend([model_response["embedding"]])
+        embeddings.extend([model_response["embeddings"]])
 
         return np.array(embeddings), token_count
 

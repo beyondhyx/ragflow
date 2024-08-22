@@ -724,9 +724,25 @@ class BedrockChat(Base):
         ans = ""
         try:
             # Send the message to the model, using a basic inference configuration.
+
+            #history = [{"role": _['role'],"content":[{"text":_['content']}]} for _ in history]
+            print ('-------below original history----------\n\n\n')
+            print (history)
+            history_bedrock_converse_format = [{
+                    "role": 'user',
+                    "content":[{"text":history[0]['content']+'问题是：'+history[-1]['content']}]
+                }]
+            # for _ in history:
+            #     history_bedrock_converse_format.append({
+            #         "role": _['role'],
+            #         "content":[{"text":_['content']}]
+            #     })
+            print ('-------below refined original history----------\n\n\n')
+            print (history_bedrock_converse_format)
+
             streaming_response = self.client.converse_stream(
                 modelId=self.model_name,
-                messages=history,
+                messages=history_bedrock_converse_format,
                 inferenceConfig=gen_conf
             )
 
